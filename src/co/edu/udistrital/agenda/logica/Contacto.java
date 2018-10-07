@@ -1,4 +1,4 @@
-package co.edu.udistrital.pryagenda.logica;
+package co.edu.udistrital.agenda.logica;
 
 public class Contacto {
 

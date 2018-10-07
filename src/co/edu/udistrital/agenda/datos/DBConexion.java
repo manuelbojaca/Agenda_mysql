@@ -1,4 +1,4 @@
-package co.edu.udistrital.pryagenda.datos;
+package co.edu.udistrital.agenda.datos;
 
 import java.sql.*;
 

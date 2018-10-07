@@ -1,7 +1,7 @@
-package co.edu.udistrital.pryagenda.datos;
+package co.edu.udistrital.agenda.datos;
 
 import java.sql.*;
-import co.edu.udistrital.pryagenda.logica.*;
+import co.edu.udistrital.agenda.logica.*;
 
 public class DBContactos {
 
@@ -18,7 +18,7 @@ public class DBContactos {
         
         try{
             PreparedStatement pstm = cn.getConexion().prepareStatement("SELECT count(1) as cont" +
-            " FROM contactos ");
+                                                                        " FROM contactos ");
             ResultSet res = pstm.executeQuery();
             res.next();
             registros = res.getInt("cont");
@@ -35,9 +35,9 @@ public class DBContactos {
                                                                    " apellido, " +
                                                                    " telefono, " +
                                                                    " celular, " +
-                                                                   " correo, " +
+                                                                   " correo " +
                                                                    " FROM contactos " + 
-                                                                   " ORDER BY nombre, apellido ");
+                                                                   "ORDER BY nombre, apellido");
             ResultSet res = pstm.executeQuery();
             int i = 0;
             while(res.next()){
@@ -74,12 +74,12 @@ public class DBContactos {
             res.next();
             cont_usuario = res.getInt("cont");
             res.close();
-            if(cont_usuario==0){
+            if(cont_usuario == 0){
                 pstm = cn.getConexion().prepareStatement("insert into contactos (nombre, " +
                                                             " apellido," +
                                                             " telefono," +                                                       " telefono_oficina," +
                                                             " celular," +
-                                                            " correo," +
+                                                            " correo)" +
                                                             " values(?,?,?,?,?,?,?,?)");
                 pstm.setString(1, c.getNombre());
                 pstm.setString(2, c.getApellido());
@@ -132,12 +132,41 @@ public class DBContactos {
         try{
             
             PreparedStatement pstm = cn.getConexion().prepareStatement("delete from contactos " +
-                                                                        " where id = ?");
+                                                                        "where id = ?");
             pstm.setInt(1, c.getId());
             resultado = pstm.executeUpdate();
         }catch(SQLException e){
             System.out.println(e);
         }   
         return resultado;
+    }
+
+ public Contacto getContactoById(int id){
+        Contacto c = new Contacto();
+        try{
+            PreparedStatement pstm = cn.getConexion().prepareStatement("SELECT con_id, " +
+                                                                                " con_nombre, " +
+                                                                                " con_apellido, " +
+                                                                                " con_celular, " +
+                                                                                " con_correo " +
+                                                                        " FROM contactos " + 
+                                                                        " WHERE con_id = ? ");
+            pstm.setInt(1, id);
+            
+            ResultSet res = pstm.executeQuery();
+            if(res.next()){
+                c.setId(res.getInt("con_id"));
+                c.setNombre(res.getString("con_nombre"));
+                c.setApellido(res.getString("con_apellido"));
+                c.setCelular(res.getString("con_celular"));
+                c.setCorreo(res.getString("con_correo"));
+            }
+            res.close();	
+            
+            
+        }catch(SQLException e){
+            System.out.println(e);
+        }
+        return c;
     }
 }
