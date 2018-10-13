@@ -1,4 +1,4 @@
-package agenda_mysql;
+/*package agenda_mysql;
 
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
@@ -48,10 +48,11 @@ public class Tabla extends JFrame {
             }
         });
     }
+}
 
     public static void main(String ar[]) {
             Tabla frame = new Tabla();
             frame.pack();
             frame.setVisible(true);
         }
-}
+}*/
