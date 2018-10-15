@@ -534,7 +534,7 @@ public class FormAgenda implements ActionListener{
         if(accion.equals("Borrar Contacto")){
             
             Contacto c = new Contacto();
-            c.setId(Integer.parseInt(textId.getText(),10));
+            c.setId(Integer.parseInt(textId.getText()));
             int r = dbco.borrarContacto(c);
             
             if(r>0){
