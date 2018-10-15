@@ -21,14 +21,19 @@ public class FormAgenda implements ActionListener{
     Container panelInformacion,panelCitas;
     JLabel labelId, labelNombre, labelApellido, labelTelefonoDomicilio,
     labelTelefonoOficina, labelDireccionDomicilio, labelDireccionOficina,
-    labelCelular, labelCorreo;
+    labelCelular, labelCorreo, labelCid, labelHora, labelFecha, labelLugar, labelAsunto;
     JTextField textId, textNombre, textApellido, textTelefonoDomicilio, textTelefonoOficina,
-    textDireccionDomicilio, textDireccionOficina, textCelular, textCorreo;
-    JButton botonNuevoContacto, botonGuardarContacto, botonEditarContacto, botonBorrarContacto;
+    textDireccionDomicilio, textDireccionOficina, textCelular, textCorreo,
+    textCid, textHora, textFecha, textLugar, textAsunto;
+    JButton botonNuevoContacto, botonGuardarContacto, botonEditarContacto,
+    botonBorrarContacto, botonGuardarCita, botonBorrarCita, botonNuevaCita, botonEditarCita;
     
-    DBContactos dbc = new DBContactos();
+    DBContactos dbco = new DBContactos();
+    DBCitas dbci = new DBCitas();
     Contacto[] contactos;
-    int estado=0;
+    Cita[] citas;
+    int estado = 0;
+    int estado1 = 0;
     int fila;
 
     public FormAgenda() {
@@ -57,6 +62,79 @@ public class FormAgenda implements ActionListener{
         pestana.addTab("Información de contacto", panelInformacion);
         pestana.addTab("Citas",panelCitas);
         
+        //CITAS
+        
+        int a = 10;
+        int b = 5;
+        int AbelAncho = 150;
+        int AbelAlto = 20;
+        int textoAncho = 150;
+        int textoAlto = 20;
+        
+        labelCid = new JLabel("Id de Cita");
+        labelCid.setBounds(a,b,100,20);
+        panelCitas.add(labelCid);
+        textCid = new JTextField();
+        textCid.setBounds(a+80,b,50,20);
+        panelCitas.add(textCid);
+        b+=30;
+        
+        labelHora = new JLabel("Hora de Cita");
+        labelHora.setBounds(a+188,b,AbelAncho,AbelAlto);
+        panelCitas.add(labelHora);
+        textHora = new JTextField();
+        textHora.setBounds(a+288,b,textoAncho,textoAlto);
+        panelCitas.add(textHora);
+        b+=30;
+        
+        labelFecha = new JLabel("Fecha de Cita");
+        labelFecha.setBounds(a+180,b,AbelAncho,AbelAlto);
+        panelCitas.add(labelFecha);
+        textFecha = new JTextField();
+        textFecha.setBounds(a+288,b,textoAncho,textoAlto);
+        panelCitas.add(textFecha);
+        b+=30;
+        AbelAncho+=100;
+        
+        labelLugar = new JLabel("Lugar de Cita");
+        labelLugar.setBounds(a+180,b,AbelAncho,AbelAlto);
+        panelCitas.add(labelLugar);
+        textLugar = new JTextField();
+        textLugar.setBounds(a+288,b,AbelAncho,AbelAlto);
+        panelCitas.add(textLugar);
+        b+=30;
+        AbelAncho+=100;
+
+        labelAsunto = new JLabel("Asunto de Cita");
+        labelAsunto.setBounds(a+170,b,AbelAncho,AbelAlto);
+        panelCitas.add(labelAsunto);
+        textAsunto = new JTextField();
+        textAsunto.setBounds(a+288,b,AbelAncho,AbelAlto);
+        panelCitas.add(textAsunto);
+
+        b+=60;
+        AbelAncho-=200;
+        
+        botonNuevaCita = new JButton("Nueva Cita");
+        botonNuevaCita.setBounds(a,b,AbelAncho,50);
+        panelCitas.add(botonNuevaCita);
+        botonNuevaCita.addActionListener(this);
+        botonGuardarCita = new JButton("Guardar Cita");
+        botonGuardarCita.setBounds(a+200,b,AbelAncho,50);
+        panelCitas.add(botonGuardarCita);
+        botonGuardarCita.addActionListener(this);
+        botonEditarCita = new JButton("Editar Cita");
+        botonEditarCita.setBounds(a+400,b,AbelAncho,50);
+        panelCitas.add(botonEditarCita);
+        botonEditarCita.addActionListener(this);
+        botonBorrarCita = new JButton("Borrar Cita");
+        botonBorrarCita.setBounds(a+600,b,AbelAncho,50);
+        panelCitas.add(botonBorrarCita);
+        botonBorrarCita.addActionListener(this);
+        citas = dbci.getCitas();
+        
+        //CONTACTOS
+        
         int y = 5;
         int x = 10;
         int labelAncho = 150;
@@ -71,12 +149,14 @@ public class FormAgenda implements ActionListener{
         textId.setBounds(x+30,y,50,20);
         panelInformacion.add(textId);
         y+=30;
+        
         labelNombre = new JLabel("Nombre",SwingConstants.RIGHT);
         labelNombre.setBounds(x,y,labelAncho,labelAlto);
         panelInformacion.add(labelNombre);
         textNombre = new JTextField();
         textNombre.setBounds(x+160,y,textAncho,textAlto);
         panelInformacion.add(textNombre);
+        
         labelApellido = new JLabel("Apellido",SwingConstants.RIGHT);
         labelApellido.setBounds(x+350,y,labelAncho,labelAlto);
         panelInformacion.add(labelApellido);
@@ -84,12 +164,15 @@ public class FormAgenda implements ActionListener{
         textApellido.setBounds(x+510,y,textAncho,textAlto);
         panelInformacion.add(textApellido);
         y+=30;
+        
         labelTelefonoDomicilio = new JLabel("Telefono Domicilio",SwingConstants.RIGHT);
         labelTelefonoDomicilio.setBounds(x,y,labelAncho,labelAlto);
+        panelCitas.add(labelTelefonoDomicilio);
         panelInformacion.add(labelTelefonoDomicilio);
         textTelefonoDomicilio = new JTextField();
         textTelefonoDomicilio.setBounds(x+160,y,textAncho,textAlto);
         panelInformacion.add(textTelefonoDomicilio);
+        
         labelTelefonoOficina = new JLabel("Telefono Oficina",SwingConstants.RIGHT);
         labelTelefonoOficina.setBounds(x+350,y,labelAncho,labelAlto);
         panelInformacion.add(labelTelefonoOficina);
@@ -97,12 +180,14 @@ public class FormAgenda implements ActionListener{
         textTelefonoOficina.setBounds(x+510,y,textAncho,textAlto);
         panelInformacion.add(textTelefonoOficina);
         y+=30;
+        
         labelDireccionDomicilio = new JLabel("Dirreción Domicilio",SwingConstants.RIGHT);
         labelDireccionDomicilio.setBounds(x,y,labelAncho,labelAlto);
         panelInformacion.add(labelDireccionDomicilio);
         textDireccionDomicilio = new JTextField();
         textDireccionDomicilio.setBounds(x+160,y,textAncho,textAlto);
         panelInformacion.add(textDireccionDomicilio);
+        
         labelDireccionOficina = new JLabel("Dirección Oficina",SwingConstants.RIGHT);
         labelDireccionOficina.setBounds(x+350,y,labelAncho,labelAlto);
         panelInformacion.add(labelDireccionOficina);
@@ -110,12 +195,14 @@ public class FormAgenda implements ActionListener{
         textDireccionOficina.setBounds(x+510,y,textAncho,textAlto);
         panelInformacion.add(textDireccionOficina);
         y+=30;
+        
         labelCelular = new JLabel("Celular",SwingConstants.RIGHT);
         labelCelular.setBounds(x,y,labelAncho,labelAlto);
         panelInformacion.add(labelCelular);
         textCelular = new JTextField();
         textCelular.setBounds(x+160,y,textAncho,textAlto);
         panelInformacion.add(textCelular);
+        
         labelCorreo = new JLabel("Correo",SwingConstants.RIGHT);
         labelCorreo.setBounds(x+350,y,labelAncho,labelAlto);
         panelInformacion.add(labelCorreo);
@@ -123,6 +210,7 @@ public class FormAgenda implements ActionListener{
         textCorreo.setBounds(x+510,y,textAncho,textAlto);
         panelInformacion.add(textCorreo);
         y+=60;
+        
         botonNuevoContacto = new JButton("Nuevo Contacto");
         botonNuevoContacto.setBounds(x,y,labelAncho,50);
         panelInformacion.add(botonNuevoContacto);
@@ -139,7 +227,7 @@ public class FormAgenda implements ActionListener{
         botonBorrarContacto.setBounds(x+600,y,labelAncho,50);
         panelInformacion.add(botonBorrarContacto);
         botonBorrarContacto.addActionListener(this);
-        contactos = dbc.getContactos();
+        contactos = dbco.getContactos();
         
         Object[][] data = new Object[contactos.length][5];
         for (int c=0;c<contactos.length;c++){
@@ -148,6 +236,7 @@ public class FormAgenda implements ActionListener{
             data[c][2]=contactos[c].getApellido();
             data[c][3]=contactos[c].getCelular();
             data[c][4]=contactos[c].getCorreo();
+            System.out.println("prueba");
         }
         
         String[] columNames = {"id","nombres","apellidos","celular","correo"};
@@ -164,20 +253,35 @@ public class FormAgenda implements ActionListener{
                 if ((fila > -1) && (columna > -1)){
                     textId.setText(String.valueOf(tablaContactos.getValueAt(fila,0)));
                     for(int i=0;i<contactos.length;i++){
+                        
                         if(String.valueOf(contactos[i].getId()).equals(
                             String.valueOf(tablaContactos.getValueAt(fila, 0)))){
-                            textNombre.setText(contactos[i].getNombre());
-                            textApellido.setText(contactos[i].getApellido());
-                            textTelefonoDomicilio.setText(contactos[i].getTelefono());
-                            textTelefonoOficina.setText(contactos[i].getTelefonoOficina());
-                            textDireccionDomicilio.setText(contactos[i].getDireccion());
-                            textDireccionOficina.setText(contactos[i].getDireccionTrabajo());
-                            textCelular.setText(contactos[i].getCelular());
-                            textCorreo.setText(contactos[i].getCorreo());
+                                textNombre.setText(contactos[i].getNombre());
+                                textApellido.setText(contactos[i].getApellido());
+                                textTelefonoDomicilio.setText(contactos[i].getTelefono());
+                                textTelefonoOficina.setText(contactos[i].getTelefonoOficina());
+                                textDireccionDomicilio.setText(contactos[i].getDireccion());
+                                textDireccionOficina.setText(contactos[i].getDireccionTrabajo());
+                                textCelular.setText(contactos[i].getCelular());
+                                textCorreo.setText(contactos[i].getCorreo());
                         }
                     }
+                    for(int j=0;j<citas.length;j++){
+                        if(String.valueOf(tablaContactos.getValueAt(fila,0)).equals(
+                            String.valueOf(citas[j].getContacto().getId()))){
+                                
+                                textCid.setText(String.valueOf(citas[j].getC_id()));
+                                textHora.setText(citas[j].getHora());
+                                textFecha.setText(citas[j].getFecha());
+                                textAsunto.setText(citas[j].getAsunto());
+                                textLugar.setText(citas[j].getLugar());
+                                System.out.println("citasText");
+                        }
+                    }
+                    estado1 = 2;
                     estado = 2;
                     alterarEstado();
+                    alterarEstadoC();
                 }
             }
         });    
@@ -192,6 +296,7 @@ public class FormAgenda implements ActionListener{
         frame.setVisible(true);
     
         alterarEstado();
+        alterarEstadoC();
     }
     
     public void alterarEstado(){
@@ -268,7 +373,64 @@ public class FormAgenda implements ActionListener{
         }    
     }
     
+    public void alterarEstadoC(){
         
+        switch(this.estado){
+        
+            case 0://estado por defecto
+                botonNuevaCita.setEnabled(true);
+                botonBorrarCita.setEnabled(false);
+                botonEditarCita.setEnabled(false);
+                botonGuardarCita.setEnabled(false);
+                
+                textCid.setEditable(false);
+                textHora.setEditable(false);
+                textFecha.setEditable(false);
+                textAsunto.setEditable(false);
+                textLugar.setEditable(false);
+                break;
+            
+            case 1://estado para un nuevo contacto
+                botonNuevaCita.setEnabled(false);
+                botonBorrarCita.setEnabled(false);
+                botonEditarCita.setEnabled(false);
+                botonGuardarCita.setEnabled(true);
+                
+                textCid.setEditable(false);
+                textHora.setEditable(true);
+                textFecha.setEditable(true);
+                textAsunto.setEditable(true);
+                textLugar.setEditable(true);
+                break;
+            
+            case 2://estado de carga de un contacto
+                botonNuevaCita.setEnabled(false);
+                botonBorrarCita.setEnabled(true);
+                botonEditarCita.setEnabled(true);
+                botonGuardarCita.setEnabled(false);
+                
+                textCid.setEditable(false);
+                textHora.setEditable(false);
+                textFecha.setEditable(false);
+                textAsunto.setEditable(false);
+                textLugar.setEditable(false);
+                break;
+            
+            case 3://estado para editar un contacto
+                botonNuevaCita.setEnabled(false);
+                botonBorrarCita.setEnabled(false);
+                botonEditarCita.setEnabled(false);
+                botonGuardarCita.setEnabled(true);
+                
+                textCid.setEditable(false);
+                textHora.setEditable(true);
+                textFecha.setEditable(true);
+                textAsunto.setEditable(true);
+                textLugar.setEditable(true);
+                break;
+        }    
+    }
+    
     public void limpiarCampos(){
     
         textId.setText("");
@@ -313,7 +475,7 @@ public class FormAgenda implements ActionListener{
                 c.setDireccionTrabajo(textDireccionOficina.getText());
                 c.setCorreo(textCorreo.getText());
                 c.setCelular(textCelular.getText());
-                int r = dbc.insertarContacto(c);
+                int r = dbco.insertarContacto(c);
                 
                 if(r>0){
                 
@@ -333,7 +495,7 @@ public class FormAgenda implements ActionListener{
                 c.setDireccionTrabajo(textDireccionOficina.getText());
                 c.setCorreo(textCorreo.getText());
                 c.setCelular(textCelular.getText());
-                int r = dbc.actualizarContacto(c);
+                int r = dbco.actualizarContacto(c);
                 
                 if(r>0){
                 
@@ -345,7 +507,7 @@ public class FormAgenda implements ActionListener{
                 }
             }
             
-            contactos = dbc.getContactos();
+            contactos = dbco.getContactos();
             limpiarCampos();
             this.estado=0;
         }
@@ -353,7 +515,7 @@ public class FormAgenda implements ActionListener{
             
             Contacto c = new Contacto();
             c.setId(Integer.parseInt(textId.getText(),10));
-            int r = dbc.borrarContacto(c);
+            int r = dbco.borrarContacto(c);
             
             if(r>0){
                 
@@ -361,7 +523,7 @@ public class FormAgenda implements ActionListener{
                 JOptionPane.showMessageDialog(null, "Contacto borrado");
                 limpiarCampos();
             }
-            contactos = dbc.getContactos();
+            contactos = dbco.getContactos();
             this.estado=0;
         }
         alterarEstado();

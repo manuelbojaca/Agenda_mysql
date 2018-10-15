@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DBConexion {
 
-    private static final String bd = "Agenda";
+    private static final String bd = "Agenda_1";
     private static final String driver = "com.mysql.jdbc.Driver";
     private static final String login = "root";
     private static final String password = "";
@@ -17,6 +17,7 @@ public class DBConexion {
             
             Class.forName(driver);
             conexion = DriverManager.getConnection(url, login, password);
+            System.out.println("conexion = " + conexion);
             if (conexion!=null){
                 System.out.println("Conexión a base de datos " + bd + " establecida");
             }

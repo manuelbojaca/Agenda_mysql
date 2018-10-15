@@ -17,14 +17,14 @@ public class DBCitas {
     public Cita getCitaById(int id) {
         Cita data = new Cita();
         try {
-            PreparedStatement pstm = cn.getConexion().prepareStatement("SELECT cit_id, "
-                    + " con_id, "
-                    + " cit_lugar, "
-                    + " cit_fecha, "
-                    + " cit_hora,"
-                    + " cit_asunto "
-                    + " FROM citas "
-                    + " where cit_id = ? ");
+            PreparedStatement pstm = cn.getConexion().prepareStatement("SELECT c_id, "
+                                                                        + " id, "
+                                                                        + " lugar, "
+                                                                        + " fecha, "
+                                                                        + " hora,"
+                                                                        + " asunto "
+                                                                        + " FROM citas "
+                                                                        + " where c_id = ? ");
 
             pstm.setInt(1, id);
             ResultSet res = pstm.executeQuery();
@@ -32,17 +32,17 @@ public class DBCitas {
             DBContactos dbc = new DBContactos();
             if (res.next()) {
                 data = new Cita();
-                data.setId(res.getInt("cit_id"));
-                data.setContacto(dbc.getContactoById(res.getInt("con_id")));
-                data.setLugar(res.getString("cit_lugar"));
-                data.setFecha(res.getString("cit_fecha"));
-                data.setHora(res.getString("cit_hora"));
-                data.setAsunto(res.getString("cit_asunto"));
+                data.setC_id(res.getInt("c_id"));
+                data.setContacto(dbc.getContactoById(res.getInt("id")));
+                data.setLugar(res.getString("lugar"));
+                data.setFecha(res.getString("fecha"));
+                data.setHora(res.getString("hora"));
+                data.setAsunto(res.getString("asunto"));
             }
             res.close();
 
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println(e + " p1");
         }
         return data;
     }
@@ -55,7 +55,7 @@ public class DBCitas {
 
         try {
             PreparedStatement pstm = cn.getConexion().prepareStatement("SELECT count(1) as cont"
-                    + " FROM citas ");
+                                                                        + " FROM citas ");
 
             ResultSet res = pstm.executeQuery();
 
@@ -64,36 +64,36 @@ public class DBCitas {
             res.close();
 
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println(e+ " p2");
         }
         Cita[] data = new Cita[registros];
         try {
-            PreparedStatement pstm = cn.getConexion().prepareStatement("SELECT cit_id, "
-                    + " con_id, "
-                    + " cit_lugar, "
-                    + " cit_fecha, "
-                    + " cit_hora,"
-                    + " cit_asunto "
-                    + " FROM citas "
-                    + " ORDER BY cit_fecha desc, cit_hora desc ");
+            PreparedStatement pstm = cn.getConexion().prepareStatement("SELECT c_id, "
+                                                                        + " id, "
+                                                                        + " hora, "
+                                                                        + " fecha, "
+                                                                        + " asunto,"
+                                                                        + " lugar "
+                                                                        + " FROM citas "
+                                                                        + " ORDER BY fecha desc, hora desc ");
 
             ResultSet res = pstm.executeQuery();
             int i = 0;
             DBContactos dbc = new DBContactos();
             while (res.next()) {
                 data[i] = new Cita();
-                data[i].setId(res.getInt("cit_id"));
-                data[i].setContacto(dbc.getContactoById(res.getInt("con_id")));
-                data[i].setLugar(res.getString("cit_lugar"));
-                data[i].setFecha(res.getString("cit_fecha"));
-                data[i].setHora(res.getString("cit_hora"));
-                data[i].setAsunto(res.getString("cit_asunto"));
+                data[i].setC_id(res.getInt("c_id"));
+                data[i].setContacto(dbc.getContactoById(res.getInt("id")));
+                data[i].setLugar(res.getString("lugar"));
+                data[i].setFecha(res.getString("fecha"));
+                data[i].setHora(res.getString("hora"));
+                data[i].setAsunto(res.getString("asunto"));
                 i++;
             }
             res.close();
 
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println(e + " Falla en citas :-)");
         }
         return data;
     }
@@ -101,12 +101,12 @@ public class DBCitas {
     public int insertarCita(Cita c) {
         int resultado = 0;//no hubo errores de validacion
         try {
-            PreparedStatement pstm = cn.getConexion().prepareStatement("insert into citas (con_id,"
-                    + " cit_lugar,"
-                    + " cit_fecha,"
-                    + " cit_hora,"
-                    + " cit_asunto) "
-                    + " values(?,?,?,?,?)");
+            PreparedStatement pstm = cn.getConexion().prepareStatement("insert into citas (id,"
+                                                                        + " lugar,"
+                                                                        + " fecha,"
+                                                                        + " hora,"
+                                                                        + " asunto) "
+                                                                        + " values(?,?,?,?,?)");
             pstm.setInt(1, c.getContacto().getId());
             pstm.setString(2, c.getLugar());
             pstm.setString(3, c.getFecha());
@@ -119,8 +119,8 @@ public class DBCitas {
             res.next();
             resultado = res.getInt(1);
             res.close();
-        } catch (SQLException e) {
-            System.out.println(e);
+        }catch (SQLException e) {
+            System.out.println(e+ " p3");
         }
         return resultado;
     }
@@ -128,23 +128,23 @@ public class DBCitas {
     public int actualizarCita(Cita c) {
         int resultado = 0;
         try {
-            PreparedStatement pstm = cn.getConexion().prepareStatement("update citas set con_id = ?, "
-                    + " cit_lugar = ?,"
-                    + " cit_fecha = ?,"
-                    + " cit_hora = ?,"
-                    + " cit_asunto = ? "
-                    + " where cit_id = ?");
+            PreparedStatement pstm = cn.getConexion().prepareStatement("update citas set id = ?, "
+                                                                        + " lugar = ?,"
+                                                                        + " fecha = ?,"
+                                                                        + " hora = ?,"
+                                                                        + " asunto = ? "
+                                                                        + " where c_id = ?");
             pstm.setInt(1, c.getContacto().getId());
             pstm.setString(2, c.getLugar());
             pstm.setString(3, c.getFecha());
             pstm.setString(4, c.getHora());
             pstm.setString(5, c.getAsunto());
-            pstm.setInt(6, c.getId());
+            pstm.setInt(6, c.getC_id());
 
             resultado = pstm.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println(e+ " p4");
         }
         return resultado;
     }
@@ -153,14 +153,14 @@ public class DBCitas {
         int resultado = 0;
         try {
             PreparedStatement pstm = cn.getConexion().prepareStatement("delete from citas "
-                    + " where cit_id = ?");
+                    + " where c_id = ?");
 
-            pstm.setInt(1, c.getId());
+            pstm.setInt(1, c.getC_id());
 
             resultado = pstm.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println(e+ " p5");
         }
 
         return resultado;

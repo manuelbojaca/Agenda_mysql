@@ -2,7 +2,7 @@ package co.edu.udistrital.agenda.logica;
 
 public class Cita {
 
-    int id;
+    int c_id;
     Contacto contacto;
     String lugar;
     String fecha;
@@ -44,12 +44,12 @@ public class Cita {
         this.hora = hora;
     }
 
-    public int getId() {
-        return id;
+    public int getC_id() {
+        return c_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setC_id(int c_id) {
+        this.c_id = c_id;
     }
 
     public String getLugar() {

@@ -11,13 +11,53 @@ public class DBContactos {
         cn = new DBConexion();
     }
     
+    public Contacto getContactoById(int id) {
+        Contacto data = new Contacto();
+        try {
+            PreparedStatement pstm = cn.getConexion().prepareStatement("SELECT id, " +
+                                                                        " nombre, " +
+                                                                        " apellido, " +
+                                                                        " telefono, " +
+                                                                        " telefono_oficina," +
+                                                                        " celular, " +
+                                                                        " correo, " +
+                                                                        " direccion," +
+                                                                        " direccion_trabajo " +
+                                                                        " FROM citas " +
+                                                                        " where id = ? ");
+
+            pstm.setInt(1, id);
+            ResultSet res = pstm.executeQuery();
+            System.out.println("res = " + res);
+            int i = 0;
+            DBContactos dbc = new DBContactos();
+            while (res.next()) {
+                
+                data = new Contacto();
+                data.setId(res.getInt("id"));
+                data.setNombre(res.getString("nombre"));
+                data.setApellido(res.getString("apellido"));
+                data.setTelefono(res.getString("telefono"));
+                data.setTelefonoOficina(res.getString("telefono_oficina"));
+                data.setCelular(res.getString("celular"));
+                data.setCorreo(res.getString("correo"));
+                data.setDireccion(res.getString("direccion"));
+                data.setDireccionTrabajo(res.getString("direccion_trabajo"));
+            }
+            res.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return data;
+    }
+    
     public Contacto[] getContactos(){
         
         int registros = 0;
         
         try{
             PreparedStatement pstm = cn.getConexion().prepareStatement("SELECT count(1) as cont" +
-            " FROM contactos ");
+                                                                        " FROM contactos ");
             ResultSet res = pstm.executeQuery();
             res.next();
             registros = res.getInt("cont");
@@ -40,10 +80,13 @@ public class DBContactos {
                                                                         " direccion_trabajo " +
                                                                         " FROM contactos " +
                                                                         " ORDER BY nombre, apellido ");
+            
             ResultSet res = pstm.executeQuery();
+            System.out.println("res = " + res);
             int i = 0;
         
             while(res.next()){
+                
                 data[i] = new Contacto();
                 data[i].setId(res.getInt("id"));
                 data[i].setNombre(res.getString("nombre"));
@@ -62,6 +105,7 @@ public class DBContactos {
         }
         return data;
     }
+    
     public int insertarContacto(Contacto c){
 
         int cont_usuario = -1;
@@ -69,7 +113,8 @@ public class DBContactos {
         try{
             PreparedStatement pstm = cn.getConexion().prepareStatement("select count(1) as cont " +
                                                                         " from contactos " +
-                                                                        " where con_correo = ? ");
+                                                                        " where correo = ? ");
+            //System.out.println("pstm = " + pstm);
             pstm.setString(1, c.getCorreo());
             ResultSet res = pstm.executeQuery();
             res.next();
@@ -77,6 +122,7 @@ public class DBContactos {
             res.close();
             
             if(cont_usuario==0){
+                
                 pstm = cn.getConexion().prepareStatement("insert into contactos (nombre, " +
                                                             " apellido," +
                                                             " telefono," +
@@ -113,6 +159,7 @@ public class DBContactos {
     
         int resultado = 0;
         try{
+            
             PreparedStatement pstm = cn.getConexion().prepareStatement("update contactos " +
                                                                         "set nombre = ?, " +
                                                                         "apellido = ?," +
@@ -122,7 +169,7 @@ public class DBContactos {
                                                                         "correo = ?," +
                                                                         "direccion = ?," +
                                                                         "direccion_trabajo = ? " +
-                                                                        "where con_id = ?");
+                                                                        "where id = ?");
             pstm.setString(1, c.getNombre());
             pstm.setString(2, c.getApellido());
             pstm.setString(3, c.getTelefono());
@@ -145,7 +192,7 @@ public class DBContactos {
         try{
             
             PreparedStatement pstm = cn.getConexion().prepareStatement("delete from contactos " +
-            " where con_id = ?");
+                                                                        " where con_id = ?");
             pstm.setInt(1, c.getId());
             resultado = pstm.executeUpdate();
         }catch(SQLException e){
