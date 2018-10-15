@@ -127,13 +127,14 @@ public class DBCitas {
 
     public int actualizarCita(Cita c) {
         int resultado = 0;
+        System.out.println("resultado 1 = " + resultado);
         try {
             PreparedStatement pstm = cn.getConexion().prepareStatement("update citas set id = ?, "
                                                                         + " lugar = ?,"
                                                                         + " fecha = ?,"
                                                                         + " hora = ?,"
                                                                         + " asunto = ? "
-                                                                        + " where c_id = ?");
+                                                                        + "where c_id = ?");
             pstm.setInt(1, c.getContacto().getId());
             pstm.setString(2, c.getLugar());
             pstm.setString(3, c.getFecha());
@@ -142,6 +143,7 @@ public class DBCitas {
             pstm.setInt(6, c.getC_id());
 
             resultado = pstm.executeUpdate();
+            System.out.println("resultado = " + resultado);
 
         } catch (SQLException e) {
             System.out.println(e+ " p4");
@@ -153,8 +155,7 @@ public class DBCitas {
         int resultado = 0;
         try {
             PreparedStatement pstm = cn.getConexion().prepareStatement("delete from citas "
-                    + " where c_id = ?");
-
+                                                                        + "where c_id = ?");
             pstm.setInt(1, c.getC_id());
 
             resultado = pstm.executeUpdate();

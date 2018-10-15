@@ -559,10 +559,12 @@ public class FormAgenda implements ActionListener{
             this.estado1=3;
         }
         if(accion.equals("Guardar Cita")){
+            
+            System.out.println("estado = " + estado1);
             if(this.estado1==1){
                 
                 Cita c = new Cita();
-                
+                c.setContacto(dbco.getContactoById(Integer.parseInt(String.valueOf(tablaContactos.getValueAt(fila,0)))));
                 c.setHora(textHora.getText());
                 c.setFecha(textFecha.getText());
                 c.setAsunto(textAsunto.getText());
@@ -571,19 +573,19 @@ public class FormAgenda implements ActionListener{
                 
                 if(r>0){
                 
-                    /*Object[] newRow={r,c.getNombre(),c.getApellido(),c.getCelular(),c.getCorreo()};
-                    modeloTabla.addRow(newRow);*/
                     JOptionPane.showMessageDialog(null, "Cita agregada");
                 }
-            }else if(this.estado==3){
+            }else if(this.estado1==3){
                 
                 Cita c = new Cita();
+                c.setContacto(dbco.getContactoById(Integer.parseInt(String.valueOf(tablaContactos.getValueAt(fila,0)))));
+                c.setHora(textHora.getText());
+                c.setFecha(textFecha.getText());
+                c.setAsunto(textAsunto.getText());
+                c.setLugar(textLugar.getText());
                 c.setC_id(Integer.parseInt(textCid.getText(),10));
-                c.setHora(textNombre.getText());
-                c.setFecha(textApellido.getText());
-                c.setAsunto(textTelefonoDomicilio.getText());
-                c.setLugar(textTelefonoOficina.getText());
                 int r = dbci.actualizarCita(c);
+                System.out.println("resultado = ");
                 
                 if(r>0){
                 
@@ -602,7 +604,7 @@ public class FormAgenda implements ActionListener{
         if(accion.equals("Borrar Cita")){
             
             Cita c = new Cita();
-            c.setC_id(Integer.parseInt(textId.getText(),10));
+            c.setC_id(Integer.parseInt(textId.getText()));
             int r = dbci.borrarCita(c);
             
             if(r>0){

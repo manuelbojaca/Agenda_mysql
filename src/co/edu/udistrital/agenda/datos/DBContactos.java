@@ -192,7 +192,7 @@ public class DBContactos {
         try{
             
             PreparedStatement pstm = cn.getConexion().prepareStatement("delete from contactos " +
-                                                                        " where con_id = ?");
+                                                                        "where id = ?");
             pstm.setInt(1, c.getId());
             resultado = pstm.executeUpdate();
         }catch(SQLException e){
@@ -201,4 +201,3 @@ public class DBContactos {
         return resultado;
     }
 }
-
