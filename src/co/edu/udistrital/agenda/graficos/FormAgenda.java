@@ -256,6 +256,7 @@ public class FormAgenda implements ActionListener{
                         
                         if(String.valueOf(contactos[i].getId()).equals(
                             String.valueOf(tablaContactos.getValueAt(fila, 0)))){
+                                
                                 textNombre.setText(contactos[i].getNombre());
                                 textApellido.setText(contactos[i].getApellido());
                                 textTelefonoDomicilio.setText(contactos[i].getTelefono());
@@ -267,6 +268,8 @@ public class FormAgenda implements ActionListener{
                         }
                     }
                     for(int j=0;j<citas.length;j++){
+                        
+                        System.out.println(String.valueOf(tablaContactos.getValueAt(fila,0)) + " " + (citas[j].getContacto().getId()));
                         if(String.valueOf(tablaContactos.getValueAt(fila,0)).equals(
                             String.valueOf(citas[j].getContacto().getId()))){
                                 
@@ -278,7 +281,7 @@ public class FormAgenda implements ActionListener{
                                 System.out.println("citasText");
                         }
                     }
-                    estado1 = 2;
+                    //estado1 = 2;
                     estado = 2;
                     alterarEstado();
                     alterarEstadoC();
@@ -375,7 +378,7 @@ public class FormAgenda implements ActionListener{
     
     public void alterarEstadoC(){
         
-        switch(this.estado){
+        switch(this.estado1){
         
             case 0://estado por defecto
                 botonNuevaCita.setEnabled(true);

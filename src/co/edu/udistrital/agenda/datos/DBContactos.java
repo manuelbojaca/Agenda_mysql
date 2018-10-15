@@ -23,7 +23,7 @@ public class DBContactos {
                                                                         " correo, " +
                                                                         " direccion," +
                                                                         " direccion_trabajo " +
-                                                                        " FROM citas " +
+                                                                        " FROM contactos " +
                                                                         " where id = ? ");
 
             pstm.setInt(1, id);
@@ -46,7 +46,7 @@ public class DBContactos {
             }
             res.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println(e + "este");
         }
         return data;
     }
