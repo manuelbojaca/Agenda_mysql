@@ -26,16 +26,18 @@ public class Dialogo extends JDialog{
         c.add(labelTitulo);
         
         labelImagen = new JLabel();
-        labelImagen.setIcon(new ImageIcon(getClass().getClassLoader().
-        getResource("escudo_ud.gif")));
+        ImageIcon icono = new ImageIcon("escudo_ud.gif");
+        labelImagen.setIcon(icono);
+        /*labelImagen.setIcon(new ImageIcon(getClass().getClassLoader().
+        getResource("escudo_ud.gif")));*/
         labelImagen.setBounds(2, 2, 50, 80);
         c.add(labelImagen);
         
         textAcerca = new JTextArea();
         textAcerca.setColumns(50);
         textAcerca.setRows(5);
-        textAcerca.setText("Universidad Distrital\nIngeniería Industrial\nProgramación "
-                + "Orientada a Objetos\n\nEjemplo de acceso a datos");
+        textAcerca.setText("Universidad Distrital\nIngeniería de Sistemas\nProgramación "
+                + "Orientada a Objetos\n\nBy: Jefferson Bojaca 20172020131\nLeider Chaverra 20172020103");
         textAcerca.setBounds(70,50,220,100);
         textAcerca.setEditable(false);
         c.add(textAcerca);
