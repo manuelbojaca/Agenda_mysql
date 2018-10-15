@@ -251,6 +251,8 @@ public class FormAgenda implements ActionListener{
                 fila = tablaContactos.rowAtPoint(e.getPoint());
                 int columna = tablaContactos.columnAtPoint(e.getPoint());
                 if ((fila > -1) && (columna > -1)){
+                    boolean p = true;
+                    estado1 = 0;
                     textId.setText(String.valueOf(tablaContactos.getValueAt(fila,0)));
                     for(int i=0;i<contactos.length;i++){
                         
@@ -268,7 +270,7 @@ public class FormAgenda implements ActionListener{
                         }
                     }
                     for(int j=0;j<citas.length;j++){
-                        
+                       
                         System.out.println(String.valueOf(tablaContactos.getValueAt(fila,0)) + " " + (citas[j].getContacto().getId()));
                         if(String.valueOf(tablaContactos.getValueAt(fila,0)).equals(
                             String.valueOf(citas[j].getContacto().getId()))){
@@ -279,9 +281,15 @@ public class FormAgenda implements ActionListener{
                                 textAsunto.setText(citas[j].getAsunto());
                                 textLugar.setText(citas[j].getLugar());
                                 System.out.println("citasText");
+                                p = false;
+                        }
+                        else if(p){
+                            limpiarCamposC();
                         }
                     }
-                    //estado1 = 2;
+                    if(!p){
+                        estado1 = 2;
+                    }
                     estado = 2;
                     alterarEstado();
                     alterarEstadoC();
@@ -447,6 +455,15 @@ public class FormAgenda implements ActionListener{
         textCelular.setText("");
     }
     
+    public void limpiarCamposC(){
+    
+        textCid.setText("");
+        textHora.setText("");
+        textFecha.setText("");
+        textAsunto.setText("");
+        textLugar.setText("");
+    }
+    
     public void actionPerformed(ActionEvent e) {
         String accion = e.getActionCommand();
         System.out.println(accion);
@@ -530,5 +547,73 @@ public class FormAgenda implements ActionListener{
             this.estado=0;
         }
         alterarEstado();
+        
+        //CITAS
+        
+        if(accion.equals("Nueva Cita")){
+            limpiarCampos();
+            this.estado1=1;
+        }
+        
+        if(accion.equals("Editar Cita")){
+            this.estado1=3;
+        }
+        if(accion.equals("Guardar Cita")){
+            if(this.estado1==1){
+                
+                Cita c = new Cita();
+                
+                c.setHora(textHora.getText());
+                c.setFecha(textFecha.getText());
+                c.setAsunto(textAsunto.getText());
+                c.setLugar(textLugar.getText());
+                int r = dbci.insertarCita(c);
+                
+                if(r>0){
+                
+                    /*Object[] newRow={r,c.getNombre(),c.getApellido(),c.getCelular(),c.getCorreo()};
+                    modeloTabla.addRow(newRow);*/
+                    JOptionPane.showMessageDialog(null, "Cita agregada");
+                }
+            }else if(this.estado==3){
+                
+                Cita c = new Cita();
+                c.setC_id(Integer.parseInt(textCid.getText(),10));
+                c.setHora(textNombre.getText());
+                c.setFecha(textApellido.getText());
+                c.setAsunto(textTelefonoDomicilio.getText());
+                c.setLugar(textTelefonoOficina.getText());
+                int r = dbci.actualizarCita(c);
+                
+                if(r>0){
+                
+                    /*modeloTabla.setValueAt(c.getNombre(), fila, 1);
+                    modeloTabla.setValueAt(c.getApellido(), fila, 2);
+                    modeloTabla.setValueAt(c.getCelular(), fila, 3);
+                    modeloTabla.setValueAt(c.getCorreo(), fila, 4);*/
+                    JOptionPane.showMessageDialog(null, "Cita actualizada");
+                }
+            }
+            
+            citas = dbci.getCitas();
+            limpiarCamposC();
+            this.estado1=0;
+        }
+        if(accion.equals("Borrar Cita")){
+            
+            Cita c = new Cita();
+            c.setC_id(Integer.parseInt(textId.getText(),10));
+            int r = dbci.borrarCita(c);
+            
+            if(r>0){
+                
+                //modeloTabla.removeRow(fila);
+                JOptionPane.showMessageDialog(null, "Cita borrada");
+                limpiarCamposC();
+            }
+            citas = dbci.getCitas();
+            this.estado1=0;
+        }
+        alterarEstadoC();
     }
 }
