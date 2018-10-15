@@ -157,11 +157,12 @@ public class DBCitas {
             PreparedStatement pstm = cn.getConexion().prepareStatement("delete from citas "
                                                                         + "where c_id = ?");
             pstm.setInt(1, c.getC_id());
-
+            System.out.println("c_id = " + c.getC_id());
             resultado = pstm.executeUpdate();
+            System.out.println("resultado = " + resultado);
 
         } catch (SQLException e) {
-            System.out.println(e+ " p5");
+            System.out.println(e + " p5");
         }
 
         return resultado;

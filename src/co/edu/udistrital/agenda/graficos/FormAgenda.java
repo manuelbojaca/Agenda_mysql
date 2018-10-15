@@ -236,7 +236,6 @@ public class FormAgenda implements ActionListener{
             data[c][2]=contactos[c].getApellido();
             data[c][3]=contactos[c].getCelular();
             data[c][4]=contactos[c].getCorreo();
-            System.out.println("prueba");
         }
         
         String[] columNames = {"id","nombres","apellidos","celular","correo"};
@@ -271,7 +270,8 @@ public class FormAgenda implements ActionListener{
                     }
                     for(int j=0;j<citas.length;j++){
                        
-                        System.out.println(String.valueOf(tablaContactos.getValueAt(fila,0)) + " " + (citas[j].getContacto().getId()));
+                        System.out.println(String.valueOf(tablaContactos.getValueAt(fila,0)) +
+                            " " + (citas[j].getContacto().getId()));
                         if(String.valueOf(tablaContactos.getValueAt(fila,0)).equals(
                             String.valueOf(citas[j].getContacto().getId()))){
                                 
@@ -280,7 +280,6 @@ public class FormAgenda implements ActionListener{
                                 textFecha.setText(citas[j].getFecha());
                                 textAsunto.setText(citas[j].getAsunto());
                                 textLugar.setText(citas[j].getLugar());
-                                System.out.println("citasText");
                                 p = false;
                         }
                         else if(p){
@@ -295,7 +294,8 @@ public class FormAgenda implements ActionListener{
                     alterarEstadoC();
                 }
             }
-        });    
+        });
+        
         frame.getContentPane().add(scrollPanel,BorderLayout.NORTH);
         frame.getContentPane().add(pestana,BorderLayout.CENTER);
         frame.pack();
@@ -401,7 +401,7 @@ public class FormAgenda implements ActionListener{
                 textLugar.setEditable(false);
                 break;
             
-            case 1://estado para un nuevo contacto
+            case 1:
                 botonNuevaCita.setEnabled(false);
                 botonBorrarCita.setEnabled(false);
                 botonEditarCita.setEnabled(false);
@@ -560,7 +560,6 @@ public class FormAgenda implements ActionListener{
         }
         if(accion.equals("Guardar Cita")){
             
-            System.out.println("estado = " + estado1);
             if(this.estado1==1){
                 
                 Cita c = new Cita();
@@ -585,14 +584,9 @@ public class FormAgenda implements ActionListener{
                 c.setLugar(textLugar.getText());
                 c.setC_id(Integer.parseInt(textCid.getText(),10));
                 int r = dbci.actualizarCita(c);
-                System.out.println("resultado = ");
                 
                 if(r>0){
                 
-                    /*modeloTabla.setValueAt(c.getNombre(), fila, 1);
-                    modeloTabla.setValueAt(c.getApellido(), fila, 2);
-                    modeloTabla.setValueAt(c.getCelular(), fila, 3);
-                    modeloTabla.setValueAt(c.getCorreo(), fila, 4);*/
                     JOptionPane.showMessageDialog(null, "Cita actualizada");
                 }
             }
@@ -604,12 +598,11 @@ public class FormAgenda implements ActionListener{
         if(accion.equals("Borrar Cita")){
             
             Cita c = new Cita();
-            c.setC_id(Integer.parseInt(textId.getText()));
+            c.setC_id(Integer.parseInt(textCid.getText()));
             int r = dbci.borrarCita(c);
             
             if(r>0){
                 
-                //modeloTabla.removeRow(fila);
                 JOptionPane.showMessageDialog(null, "Cita borrada");
                 limpiarCamposC();
             }
